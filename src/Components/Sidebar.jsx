@@ -73,7 +73,9 @@
 
 
 import React, { useState } from "react";
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar, Box, FormControl, InputLabel, Select, MenuItem, Collapse } from "@mui/material";
+import {
+    Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar, Box, FormControl, InputLabel, Select, MenuItem, Collapse
+} from "@mui/material";
 import { LocalShipping, Map, Info, Inventory, Directions } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
@@ -98,43 +100,31 @@ const ports = [
     { name: "Delhi Inland Container Depot", city: "Delhi", country: "India" },
     { name: "Mumbai Goods Terminus", city: "Mumbai", country: "India" },
     { name: "Chennai Central Freight Hub", city: "Chennai", country: "India" },
-    { name: "Port of Shanghai", city: "Shanghai", country: "China" },
-    { name: "Port of Shenzhen", city: "Shenzhen", country: "China" },
-    { name: "Port of Ningbo-Zhoushan", city: "Ningbo", country: "China" },
-    { name: "Shanghai Pudong International Airport", city: "Shanghai", country: "China" },
-    { name: "Beijing Capital International Airport", city: "Beijing", country: "China" },
-    { name: "Chengdu Railway Container Center Station", city: "Chengdu", country: "China" },
-    { name: "Manzhouli Railway Station", city: "Manzhouli", country: "China" },
-    { name: "Port of Novorossiysk", city: "Novorossiysk", country: "Russia" },
-    { name: "Port of Saint Petersburg", city: "Saint Petersburg", country: "Russia" },
-    { name: "Sheremetyevo International Airport", city: "Moscow", country: "Russia" },
-    { name: "Domodedovo International Airport", city: "Moscow", country: "Russia" },
-    { name: "Moscow-Tovarnaya-Kurskaya Railway Station", city: "Moscow", country: "Russia" },
-    { name: "Vladivostok-Tovarny Railway Station", city: "Vladivostok", country: "Russia" },
-    { name: "Port of Helsinki", city: "Helsinki", country: "Finland" },
-    { name: "Helsinki-Vantaa Airport", city: "Helsinki", country: "Finland" },
-    { name: "Helsinki Vuosaari Harbour Railway Yard", city: "Helsinki", country: "Finland" },
-    { name: "Port of Piraeus", city: "Piraeus", country: "Greece" },
-    { name: "Athens International Airport", city: "Athens", country: "Greece" },
-    { name: "Thriasio Freight Center", city: "Athens", country: "Greece" },
 ];
+
+const transportModes = ["Sea", "Land", "Air"];
 
 const Sidebar = () => {
     const [showRoutePanel, setShowRoutePanel] = useState(false);
     const [source, setSource] = useState("");
     const [destination, setDestination] = useState("");
+    const [mode, setMode] = useState("");
 
     return (
         <Drawer
             variant="permanent"
             sx={{
-                width: 300,
+                width: 600,
                 flexShrink: 0,
-                [`& .MuiDrawer-paper`]: { width: 300, marginTop: "64px" },
+                [`& .MuiDrawer-paper`]: { width: 600, marginTop: "64px" },
             }}
         >
             <Toolbar /> {/* Keeps sidebar content below navbar */}
             <List>
+                <ListItem button onClick={() => setShowRoutePanel(!showRoutePanel)}>
+                    <ListItemIcon><Directions /></ListItemIcon>
+                    <ListItemText primary="Find Route" />
+                </ListItem>
                 <ListItem button component={Link} to="/">
                     <ListItemIcon><Map /></ListItemIcon>
                     <ListItemText primary="Track Shipment" />
@@ -143,20 +133,13 @@ const Sidebar = () => {
                     <ListItemIcon><LocalShipping /></ListItemIcon>
                     <ListItemText primary="Route Details" />
                 </ListItem>
-                <ListItem button component={Link} to="/transport-modes">
-                    <ListItemIcon><Inventory /></ListItemIcon>
-                    <ListItemText primary="Transport Modes" />
-                </ListItem>
                 <ListItem button component={Link} to="/info">
                     <ListItemIcon><Info /></ListItemIcon>
                     <ListItemText primary="Weather & Info" />
                 </ListItem>
-                <ListItem button onClick={() => setShowRoutePanel(!showRoutePanel)}>
-                    <ListItemIcon><Directions /></ListItemIcon>
-                    <ListItemText primary="Find Route" />
-                </ListItem>
                 <Collapse in={showRoutePanel} timeout="auto" unmountOnExit>
                     <Box sx={{ p: 2 }}>
+                        {/* Source Selection */}
                         <FormControl fullWidth sx={{ mb: 2 }}>
                             <InputLabel>Source</InputLabel>
                             <Select value={source} onChange={(e) => setSource(e.target.value)}>
@@ -167,7 +150,9 @@ const Sidebar = () => {
                                 ))}
                             </Select>
                         </FormControl>
-                        <FormControl fullWidth>
+
+                        {/* Destination Selection */}
+                        <FormControl fullWidth sx={{ mb: 2 }}>
                             <InputLabel>Destination</InputLabel>
                             <Select value={destination} onChange={(e) => setDestination(e.target.value)}>
                                 {ports.map((port, index) => (
@@ -177,6 +162,24 @@ const Sidebar = () => {
                                 ))}
                             </Select>
                         </FormControl>
+
+                        {/* Transport Mode Selection */}
+                        <FormControl fullWidth sx={{ mb: 2 }}>
+                            <InputLabel>Mode of Transport</InputLabel>
+                            <Select value={mode} onChange={(e) => setMode(e.target.value)}>
+                                {transportModes.map((m, index) => (
+                                    <MenuItem key={index} value={m}>{m}</MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+
+                        {/* Display Selected Values */}
+                        {source && destination && mode && (
+                            <Box sx={{ mt: 2, p: 2, bgcolor: "#f5f5f5", borderRadius: "5px" }}>
+                                <strong>Selected Route:</strong> <br />
+                                {source} → {destination} via {mode}
+                            </Box>
+                        )}
                     </Box>
                 </Collapse>
             </List>
