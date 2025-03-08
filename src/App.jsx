@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Sidebar from "./components/Sidebar";
-import MapComponent from "./components/MapComponent";
-import WeatherOverlay from "./components/WeatherOverlay";
+import Sidebar from "./Components/Sidebar";
+import MapComponent from "./Components/MapComponent";
+import WeatherOverlay from "./Components/WeatherOverlay";
 import "./App.css";
 
 function App() {
