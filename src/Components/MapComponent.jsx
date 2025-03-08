@@ -4,47 +4,47 @@ import Papa from "papaparse";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-// Custom icons for different types of locations
-const icons = {
-    Seaport: new L.Icon({
-        iconUrl: "https://cdn-icons-png.flaticon.com/512/3075/3075933.png",
-        iconSize: [30, 30],
-    }),
-    Default: new L.Icon({
-        iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
-        iconSize: [30, 30],
-    }),
-};
+// Single Blue Location Marker Icon
+const blueMarkerIcon = new L.Icon({
+    iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png", // Blue marker icon
+    iconSize: [30, 30],
+});
 
 const MapComponent = () => {
     const [waypoints, setWaypoints] = useState([]);
     const [routes, setRoutes] = useState([]);
 
     useEffect(() => {
-        fetch("/routes.csv") // Ensure routes.csv is in the public folder
+        // Fetch and parse the CSV file
+        fetch("public/portData.csv") // Ensure the CSV file is in the public folder
             .then((response) => response.text())
             .then((csvText) => {
                 Papa.parse(csvText, {
                     header: true,
                     skipEmptyLines: true,
                     complete: (result) => {
-                        const locations = result.data
-                            .map((row) => ({
-                                name: row["Facility Name"] || "Unknown",
-                                lat: parseFloat(row.Latitude),
-                                lng: parseFloat(row.Longitude),
-                                type: row.Type || "Default",
-                            }))
-                            .filter((loc) => loc.type === "Seaport"); // Only Seaports
+                        const validLocations = result.data
+                            .map((row) => {
+                                const lat = parseFloat(row.Latitude);
+                                const lng = parseFloat(row.Longitude);
 
-                        console.log("Seaports Found:", locations.length, locations); // Debugging
+                                // Validate latitude & longitude
+                                if (!isNaN(lat) && !isNaN(lng)) {
+                                    return { lat, lng };
+                                } else {
+                                    console.warn("Skipping invalid location:", row);
+                                    return null;
+                                }
+                            })
+                            .filter((loc) => loc !== null); // Remove null values
 
-                        setWaypoints(locations);
-                        setRoutes(locations.map((loc) => [loc.lat, loc.lng])); // Extract coordinates
+                        setWaypoints(validLocations);
+                        setRoutes(validLocations.map((loc) => [loc.lat, loc.lng]));
                     },
+                    error: (err) => console.error("CSV Parsing Error:", err),
                 });
             })
-            .catch((error) => console.error("Error loading CSV:", error));
+            .catch((err) => console.error("CSV Fetch Error:", err));
     }, []);
 
     return (
@@ -57,21 +57,20 @@ const MapComponent = () => {
                     attribution='&copy; <a href="https://www.google.com/maps">Google Maps</a>'
                 />
 
-                {/* Plot Seaports */}
+                {/* Plot Waypoints with a Single Blue Marker */}
                 {waypoints.map((loc, index) => (
                     <Marker
                         key={index}
                         position={[loc.lat, loc.lng]}
-                        icon={icons.Seaport}
+                        icon={blueMarkerIcon} // Uses the single blue icon
                     >
                         <Popup>
-                            <strong>{loc.name}</strong> <br />
-                            Type: {loc.type}
+                            <strong>Location {index + 1}</strong>
                         </Popup>
                     </Marker>
                 ))}
 
-                {/* Draw Route Between Seaports */}
+                {/* Draw Route (if multiple points exist) */}
                 {routes.length > 1 && <Polyline positions={routes} color="blue" weight={4} />}
             </MapContainer>
         </div>

@@ -16,6 +16,7 @@
     "@react-google-maps/api": "^2.20.6",
     "@tailwindcss/postcss": "^4.0.12",
     "@tailwindcss/vite": "^4.0.12",
+    "axios": "^1.8.2",
     "leaflet": "^1.9.4",
     "mapbox-gl": "^3.10.0",
     "ol": "^10.4.0",
@@ -24,6 +25,7 @@
     "react-dom": "^19.0.0",
     "react-leaflet": "^5.0.0",
     "react-map-gl": "^8.0.1",
+    "react-router-dom": "^7.3.0",
     "recharts": "^2.15.1"
   },
   "devDependencies": {
