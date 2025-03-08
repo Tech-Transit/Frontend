@@ -1,15 +1,6 @@
-
-
-
-
-
-
-
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import {
-    Box, FormControl, InputLabel, Select, MenuItem, Button, CircularProgress, Typography
+    Box, FormControl, InputLabel, Select, MenuItem, Button, CircularProgress, Typography, TextField
 } from "@mui/material";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -87,10 +78,19 @@ const facilities = [
 // Transport modes
 const transportModes = ["Seaport", "Rail Terminal", "Airport"];
 
+// Shipment categories and weight limits
+const shipmentCategories = [
+    { name: "Airport (Air Cargo)", minWeight: 30, maxWeight: 100000 },
+    { name: "Seaport (Sea Freight)", minWeight: 1000, maxWeight: 30000 },
+    { name: "Railway (Rail Cargo)", minWeight: 10000, maxWeight: 120000 },
+];
+
 const Home = () => {
     const [source, setSource] = useState("");
     const [destination, setDestination] = useState("");
     const [mode, setMode] = useState("");
+    const [category, setCategory] = useState("");
+    const [weight, setWeight] = useState("");
     const [routeData, setRouteData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -127,15 +127,15 @@ const Home = () => {
     // Function to calculate distance between two coordinates
     const calculateDistance = (lat1, lon1, lat2, lon2) => {
         const R = 6371e3; // metres
-        const φ1 = lat1 * Math.PI/180; // φ, λ in radians
-        const φ2 = lat2 * Math.PI/180;
-        const Δφ = (lat2-lat1) * Math.PI/180;
-        const Δλ = (lon1-lon2) * Math.PI/180;
+        const φ1 = lat1 * Math.PI / 180; // φ, λ in radians
+        const φ2 = lat2 * Math.PI / 180;
+        const Δφ = (lat2 - lat1) * Math.PI / 180;
+        const Δλ = (lon1 - lon2) * Math.PI / 180;
 
-        const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-                  Math.cos(φ1) * Math.cos(φ2) *
-                  Math.sin(Δλ/2) * Math.sin(Δλ/2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         const d = R * c; // in metres
         return d;
@@ -214,11 +214,52 @@ const Home = () => {
         }
     };
 
+    const handleCategoryChange = (event) => {
+        setCategory(event.target.value);
+    };
+
+    const handleWeightChange = (event) => {
+        setWeight(event.target.value);
+    };
+
+    const isWeightValid = () => {
+        const selectedCategory = shipmentCategories.find(cat => cat.name === category);
+        if (!selectedCategory) return false;
+        const weightValue = parseFloat(weight);
+        return weightValue >= selectedCategory.minWeight && weightValue <= selectedCategory.maxWeight;
+    };
+
+    const isFormValid = () => {
+        return source && destination && mode && category && isWeightValid();
+    };
+
     return (
         <Box sx={{ display: 'flex', height: '100vh' }}>
             {/* Left Section (Form) */}
             <Box sx={{ flex: 4, padding: 3, borderRight: '1px solid #ccc' }}>
-                <Typography variant="h4" gutterBottom>Transport Route Finder</Typography>
+                <Typography variant="h5" gutterBottom>Shipment Details</Typography>
+
+                <FormControl variant="standard" fullWidth sx={{ mb: 2 }}>
+                    <InputLabel>Category</InputLabel>
+                    <Select value={category} onChange={handleCategoryChange}>
+                        {shipmentCategories.map((cat) => (
+                            <MenuItem key={cat.name} value={cat.name}>
+                                {cat.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+
+                <TextField
+                    variant="standard"
+                    fullWidth
+                    label="Total Weight (kg)"
+                    value={weight}
+                    onChange={handleWeightChange}
+                    type="number"
+                    sx={{ mb: 8 }}
+                />
+                <Typography variant="h5" gutterBottom>Transport Route Finder</Typography>
 
                 <FormControl variant="standard" fullWidth sx={{ mb: 2 }}>
                     <InputLabel>Source</InputLabel>
@@ -242,7 +283,7 @@ const Home = () => {
                     </Select>
                 </FormControl>
 
-                <FormControl variant="standard" fullWidth sx={{ mb: 2 }}>
+                <FormControl variant="standard" fullWidth sx={{ mb: 8 }}>
                     <InputLabel>Mode</InputLabel>
                     <Select value={mode} onChange={(e) => setMode(e.target.value)}>
                         {transportModes.map((modeOption) => (
@@ -253,9 +294,15 @@ const Home = () => {
                     </Select>
                 </FormControl>
 
-                <Button variant="contained" onClick={findRoute} sx={{ mt: 2, width: "100%" }}>
+
+                {/* <Button
+                    variant="contained"
+                    onClick={findRoute}
+                    sx={{ mt: 2, width: "100%" }}
+                    disabled={!isFormValid()}
+                >
                     Find Route
-                </Button>
+                </Button> */}
 
                 {loading && <CircularProgress sx={{ mt: 2 }} />}
                 {error && <Box sx={{ mt: 2, color: 'red' }}>{error}</Box>}
@@ -276,8 +323,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
-
-
-
