@@ -44,7 +44,7 @@ const Home = () => {
             <Typography mb={2}>Track your shipment in real-time.</Typography>
 
             {/* Google Maps Tile in Leaflet */}
-            <Box sx={{ height: "800px", width: "100%", borderRadius: "8px", overflow: "hidden" }}>
+            {/* <Box sx={{ height: "800px", width: "100%", borderRadius: "8px", overflow: "hidden" }}>
                 <MapContainer center={[37.7749, -122.4194]} zoom={10} style={{ height: "100%", width: "100%" }}>
                     <TileLayer
                         url="http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
@@ -54,7 +54,7 @@ const Home = () => {
                         <Popup>Shipment is here!</Popup>
                     </Marker>
                 </MapContainer>
-            </Box>
+            </Box> */}
         </Box>
     );
 };

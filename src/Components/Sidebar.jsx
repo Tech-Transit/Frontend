@@ -233,14 +233,14 @@
 
 
 
-
 import React, { useState } from "react";
 import {
     Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar, Box, FormControl, InputLabel, Select, MenuItem, Collapse, Button, CircularProgress
 } from "@mui/material";
 import { Directions } from "@mui/icons-material";
+import MapComponent from "./MapComponent";
 
-// List of all ports, airports, and rail terminals
+// List of all ports, airports, and rail terminals (national and international)
 const facilities = [
     // Indian Ports
     { name: "Mundra Port", city: "Mundra", country: "India" },
@@ -314,6 +314,7 @@ const facilities = [
 
 const transportModes = ["Seaport", "Rail Terminal", "Airport"];
 
+
 const Sidebar = () => {
     const [showRoutePanel, setShowRoutePanel] = useState(false);
     const [source, setSource] = useState("");
@@ -323,6 +324,7 @@ const Sidebar = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    // Function to call backend API
     const findRoute = async () => {
         if (!source || !destination || !mode) {
             alert("Please select source, destination, and transport mode.");
@@ -339,7 +341,6 @@ const Sidebar = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ source, target: destination, preferred_mode: mode })
             });
-            console.log("API called with:", { source, destination, mode });
 
             if (!response.ok) {
                 throw new Error("Failed to fetch route data");
@@ -353,6 +354,7 @@ const Sidebar = () => {
             setLoading(false);
         }
     };
+
 
     return (
         <Drawer
@@ -374,9 +376,10 @@ const Sidebar = () => {
                         <FormControl fullWidth sx={{ mb: 2 }}>
                             <InputLabel>Source</InputLabel>
                             <Select value={source} onChange={(e) => setSource(e.target.value)}>
+                                {/* Render list of facilities */}
                                 {facilities.map((facility, index) => (
                                     <MenuItem key={index} value={facility.name}>
-                                        {facility.name} - {facility.city}, {facility.country}
+                                        {facility.name} ({facility.city}, {facility.country})
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -385,9 +388,10 @@ const Sidebar = () => {
                         <FormControl fullWidth sx={{ mb: 2 }}>
                             <InputLabel>Destination</InputLabel>
                             <Select value={destination} onChange={(e) => setDestination(e.target.value)}>
+                                {/* Render list of facilities */}
                                 {facilities.map((facility, index) => (
                                     <MenuItem key={index} value={facility.name}>
-                                        {facility.name} - {facility.city}, {facility.country}
+                                        {facility.name} ({facility.city}, {facility.country})
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -398,18 +402,22 @@ const Sidebar = () => {
                             <InputLabel>Transport Mode</InputLabel>
                             <Select value={mode} onChange={(e) => setMode(e.target.value)}>
                                 {transportModes.map((mode, index) => (
-                                    <MenuItem key={index} value={mode}>{mode}</MenuItem>
+                                    <MenuItem key={index} value={mode}>
+                                        {mode}
+                                    </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
 
-
                         <Button variant="contained" onClick={findRoute} sx={{ mt: 2, width: "100%" }}>
-                            Find Route
+                            {loading ? <CircularProgress size={24} /> : "Find Route"}
                         </Button>
                     </Box>
                 </Collapse>
             </List>
+
+            {/* Pass routeData (which includes coordinates) to the MapComponent */}
+            {routeData && <MapComponent routeData={routeData} />}
         </Drawer>
     );
 };
