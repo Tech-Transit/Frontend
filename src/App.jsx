@@ -1,35 +1,32 @@
-import { useState } from "react";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./Components/Navbar";
 import Sidebar from "./Components/Sidebar";
-import MapComponent from "./Components/MapComponent";
-import WeatherOverlay from "./Components/WeatherOverlay";
-import "./App.css";
+import Home from "./Pages/Home";
+import Pricing from "./Pages/Pricing";
+// import Resources from "./Pages/Resources";
+// import Company from "./Pages/Company";
+// import Product from "./Pages/Product";
+import { Box } from "@mui/material";
 
-function App() {
-  const [selectedMode, setSelectedMode] = useState(null);
-  const [selectedRouteInfo, setSelectedRouteInfo] = useState(null);
-
-  const handleAddWaypoint = (waypoint) => {
-    console.log("New Waypoint:", waypoint);
-  };
-
+const App = () => {
   return (
-    <div className="flex">
-      {/* Map Section */}
-      <div className="w-3/4">
-        <MapComponent />
-      </div>
-
-      {/* Sidebar Section */}
-      <Sidebar
-        onSelectMode={setSelectedMode}
-        onAddWaypoint={handleAddWaypoint}
-        selectedRouteInfo={selectedRouteInfo}
-      />
-
-      {/* Weather Overlay */}
-      <WeatherOverlay location={"Some City"} />
-    </div>
+    <Router>
+      <Navbar />
+      <Box sx={{ display: "flex", marginTop: "64px" }}>
+        <Sidebar />
+        <Box sx={{ flexGrow: 1, padding: 3 }}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/pricing" element={<Pricing />} />
+            {/* <Route path="/resources" element={<Resources />} />
+            <Route path="/company" element={<Company />} />
+            <Route path="/product" element={<Product />} /> */}
+          </Routes>
+        </Box>
+      </Box>
+    </Router>
   );
-}
+};
 
 export default App;
