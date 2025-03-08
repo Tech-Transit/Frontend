@@ -50,7 +50,7 @@
 //     return (
 //         <div className="h-screen w-full">
 //             <MapContainer center={[20.0, 80.0]} zoom={4} className="h-full w-full">
-                
+
 //                 {/* Google Maps Tile Layer */}
 //                 <TileLayer
 //                     url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&hl=en"
@@ -79,65 +79,78 @@
 
 // export default MapComponent;
 
+
+
+
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Polyline } from "react-leaflet";
 import axios from "axios";
 import L from "leaflet";
-import polyline from "polyline"; // Required for decoding Google Maps polyline
-
 const MapComponent = () => {
+    const [source, setSource] = useState("");  // Source port
+    const [destination, setDestination] = useState("");  // Destination port
+    const [mode, setMode] = useState("sea");  // Transport mode (default: sea)
     const [routeCoords, setRouteCoords] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
-    useEffect(() => {
-        const fetchGoogleRoute = async () => {
-            const API_KEY = "YOUR_GOOGLE_MAPS_API_KEY";
-            const origin = "Mumbai, India"; 
-            const destination = "Chennai, India";
+    // Function to fetch route from backend
+    const fetchRouteFromBackend = async () => {
+        setLoading(true);
+        try {
+            // console.log("API called with:", { source, target, mode });
 
-            try {
-                const response = await axios.get(
-                    `https://maps.googleapis.com/maps/api/directions/json?origin=${origin}&destination=${destination}&key=${API_KEY}`
-                );
+            const response = await axios.post("http://127.0.0.1:5000/api/calculate_routes", {
+                source,
+                target: destination,  // Backend expects "target"
+                preferred_mode: mode
+            });
 
-                if (response.data.routes.length > 0) {
-                    const encodedPolyline = response.data.routes[0].overview_polyline.points;
-                    const decodedPolyline = polyline.decode(encodedPolyline).map(([lat, lng]) => ({ lat, lng }));
-                    setRouteCoords(decodedPolyline);
-                }
-            } catch (error) {
-                console.error("Error fetching route:", error);
+            if (response.data && response.data.route) {
+                setRouteCoords(response.data.route);  // Expecting an array of { lat, lng }
+            } else {
+                throw new Error("Invalid response format");
             }
-        };
+        } catch (err) {
+            console.error("Error fetching route from backend:", err);
+            setError("Failed to load route");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        fetchGoogleRoute();
-    }, []);
 
     return (
         <div style={{ height: "90vh", width: "100%" }}>
-            <MapContainer center={[19.0760, 72.8777]} zoom={6} style={{ height: "100%", width: "100%" }}>
-                <TileLayer url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&hl=en" />
-                
-                {/* Marker for Mumbai (Start Location) */}
-                <Marker position={[19.0760, 72.8777]} icon={new L.Icon({
-                    iconUrl: "https://cdn-icons-png.flaticon.com/512/3075/3075933.png",
-                    iconSize: [30, 30],
-                })} />
+            {loading ? <p>Loading map...</p> : error ? <p>{error}</p> : (
+                <MapContainer center={[19.0760, 72.8777]} zoom={6} style={{ height: "100%", width: "100%" }}>
+                    <TileLayer url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&hl=en" />
 
-                {/* Route Polyline */}
-                {routeCoords.length > 1 && (
-                    <>
-                        <Polyline positions={routeCoords} color="blue" weight={4} />
-
-                        {/* Marker for Chennai (End Location) */}
-                        <Marker position={[13.0827, 80.2707]} icon={new L.Icon({
+                    {/* Start Marker */}
+                    {routeCoords.length > 0 && (
+                        <Marker position={routeCoords[0]} icon={new L.Icon({
                             iconUrl: "https://cdn-icons-png.flaticon.com/512/3075/3075933.png",
                             iconSize: [30, 30],
                         })} />
-                    </>
-                )}
-            </MapContainer>
+                    )}
+
+                    {/* Route Polyline */}
+                    {routeCoords.length > 1 && (
+                        <>
+                            <Polyline positions={routeCoords} color="blue" weight={4} />
+
+                            {/* End Marker */}
+                            <Marker position={routeCoords[routeCoords.length - 1]} icon={new L.Icon({
+                                iconUrl: "https://cdn-icons-png.flaticon.com/512/3075/3075933.png",
+                                iconSize: [30, 30],
+                            })} />
+                        </>
+                    )}
+                </MapContainer>
+            )}
         </div>
     );
 };
 
 export default MapComponent;
+
