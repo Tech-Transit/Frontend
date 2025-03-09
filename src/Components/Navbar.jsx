@@ -1,21 +1,18 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import { AppBar, Toolbar, Button, Box } from "@mui/material";
 import { Link } from "react-router-dom";
+import logo from '../assets/logo.png'; // Import the logo from the assets folder
 
 const Navbar = () => {
     return (
         <AppBar position="fixed" color="primary">
-            <Toolbar>
-                {/* Shipment Tracker now clickable */}
-                <Typography 
-                    variant="h6" 
-                    component={Link} 
-                    to="/" 
-                    sx={{ flexGrow: 1, textDecoration: "none", color: "inherit", cursor: "pointer" }}
-                >
-                    Shipment Tracker
-                </Typography>
+            <Toolbar sx={{ justifyContent: 'space-between' }}>
+                {/* Logo */}
+                <Box component={Link} to="/" sx={{ display: 'flex', alignItems: 'center', textDecoration: "none", color: "inherit" }}>
+                    <img src={logo} alt="Logo" style={{ height: 50, marginRight: 10 }} />
+                </Box>
                 
+                {/* Navbar Buttons */}
                 <Box>
                     <Button color="inherit" component={Link} to="/">Home</Button>
                     <Button color="inherit" component={Link} to="/pricing">Pricing</Button>

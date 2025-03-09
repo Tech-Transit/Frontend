@@ -100,6 +100,7 @@ const Home = () => {
   const [category, setCategory] = useState("");
   const [weight, setWeight] = useState("");
   const [routeData, setRouteData] = useState([]);
+  const [rankedRoutes, setRankedRoutes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const mapRef = useRef(null);
@@ -119,6 +120,23 @@ const Home = () => {
       }
     } catch (error) {
       setError("Error fetching coordinates");
+    }
+  };
+
+  // Function to fetch ranked routes
+  const fetchRankedRoutes = async () => {
+    try {
+      const response = await axios.post("http://127.0.0.1:5000/api/ranked_routes", {
+        source: source,
+        target: destination,
+        preferred_mode: mode,
+      });
+
+      if (response.data && response.data.length > 0) {
+        setRankedRoutes(response.data);
+      }
+    } catch (error) {
+      setError("Error fetching ranked routes");
     }
   };
 
@@ -199,6 +217,7 @@ const Home = () => {
 
     try {
       await fetchCoordinates();
+      await fetchRankedRoutes();
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -228,7 +247,7 @@ const Home = () => {
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
       {/* Left Section (Form) */}
-      <Box sx={{ flex: 4, padding: 3, borderRight: "1px solid #ccc" }}>
+      <Box sx={{ flex: 4, padding: 3, borderRight: "1px solid #ccc", overflowY: "auto" }}>
         <Typography variant="h5" gutterBottom>
           Shipment Details
         </Typography>
@@ -303,10 +322,14 @@ const Home = () => {
 
         {loading && <CircularProgress sx={{ mt: 2 }} />}
         {error && <Box sx={{ mt: 2, color: "red" }}>{error}</Box>}
-        {routeData.length > 0 && (
+        {rankedRoutes.length > 0 && (
           <Box sx={{ mt: 2 }}>
-            {/* <Typography variant="h6">Route Data:</Typography> */}
-            {/* <pre>{JSON.stringify(routeData, null, 2)}</pre> */}
+            <Typography variant="h6">Ranked Routes:</Typography>
+            <ul>
+              {rankedRoutes.map((route, index) => (
+                <li key={index}>{`Route ${index + 1}: ${route}`}</li>
+              ))}
+            </ul>
           </Box>
         )}
       </Box>
