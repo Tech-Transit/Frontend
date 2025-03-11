@@ -1,4 +1,4 @@
-name: Docker Image CI [Fontend:wf] {wf == WorkFlow}
+name: Docker Image CI [Fontend:wf]
 
 on:
   push:
