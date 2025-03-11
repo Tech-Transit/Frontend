@@ -1,5 +1,7 @@
 # React + Vite
 
+[![Docker Image CI [Fontend:wf]](https://github.com/Tech-Transit/Frontend/actions/workflows/docker-image.yml/badge.svg)](https://github.com/Tech-Transit/Frontend/actions/workflows/docker-image.yml)
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
