@@ -1091,15 +1091,15 @@ const Home = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh",  background: 'linear-gradient(90deg, hsla(236, 100%, 8%, 1) 0%, hsla(211, 100%, 28%, 1) 100%)', color: "white", fontFamily: "lato", overflow: "hidden" }}>
+    <Box sx={{ display: "flex", height: "100vh", background: 'linear-gradient(90deg, hsla(236, 100%, 8%, 1) 0%, hsla(211, 100%, 28%, 1) 100%)', color: "white", fontFamily: "lato", overflow: "hidden" }}>
       {/* Left Section (Form) */}
       <Box sx={{ flex: 2, padding: 3, borderRight: "1px solid #ccc", overflowY: "auto" }}>
-        <Typography variant="h5" sx={{ fontWeight: 'bold' , fontFamily :'lato'}} gutterBottom>
+        <Typography variant="h5" sx={{ fontWeight: 'bold', fontFamily: 'lato' }} gutterBottom>
           Shipment Details
         </Typography>
 
         <FormControl variant="outlined" fullWidth sx={{ mb: 2 }}>
-          <InputLabel sx={{ color: "white" , fontFamily :'lato' }}>Category</InputLabel>
+          <InputLabel sx={{ color: "white", fontFamily: 'lato' }}>Category</InputLabel>
           <Select
             multiple
             value={category}
@@ -1157,7 +1157,7 @@ const Home = () => {
           InputProps={{ style: { color: 'white' } }}
         />
 
-        <Typography variant="h5" sx={{ fontWeight: 'bold' , fontFamily :'lato'}}  gutterBottom>
+        <Typography variant="h5" sx={{ fontWeight: 'bold', fontFamily: 'lato' }} gutterBottom>
           Transport Route Finder
         </Typography>
 
@@ -1244,17 +1244,17 @@ const Home = () => {
               {rankedRoutes.map((route, index) => (
                 <li key={index}>{`Route ${index + 1}: ${route}`}</li>
               ))}
-                            </ul>
-                          </Box>
-                        )}
-                      </Box>
-                
-                      {/* Right Section (Map) */}
-                      <Box sx={{ flex: 8, overflow: "hidden" }}>
-                        <Box ref={mapRef} style={{ height: "100%", width: "100%" }} />
-                      </Box>
-                    </Box>
-                  );
-                };
-                
-                export default Home;
+            </ul>
+          </Box>
+        )}
+      </Box>
+
+      {/* Right Section (Map) */}
+      <Box sx={{ flex: 8, overflow: "hidden" }}>
+        <Box ref={mapRef} style={{ height: "100%", width: "100%" }} />
+      </Box>
+    </Box>
+  );
+};
+
+export default Home;
