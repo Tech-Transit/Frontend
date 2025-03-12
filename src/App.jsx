@@ -9,11 +9,10 @@ const App = () => {
   return (
     <Router>
       <Navbar />
-      <Box sx={{ display: "flex", marginTop: "64px" }}>
-        <Box sx={{ flexGrow: 1, padding: 3 }}>
+      <Box sx={{ display: "flex" , marginTop: 11}}>
+        <Box sx={{ flexGrow: 1 }}>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/pricing" element={<Pricing />} />
           </Routes>
         </Box>
       </Box>
