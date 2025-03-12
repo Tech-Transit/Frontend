@@ -810,7 +810,6 @@
 
 
 
-
 import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
@@ -946,9 +945,13 @@ const Home = () => {
   const fetchCoordinates = async () => {
     try {
       const response = await axios.post("http://127.0.0.1:5000/api/calculate_routes", {
-        source: source,
-        target: destination,
+        source: source[0],
+        target: destination[0],
         preferred_mode: mode,
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
       if (response.data && response.data.length > 0) {
@@ -963,9 +966,13 @@ const Home = () => {
   const fetchRankedRoutes = async () => {
     try {
       const response = await axios.post("http://127.0.0.1:5000/api/ranked_routes", {
-        source: source,
-        target: destination,
+        source: source[0],
+        target: destination[0],
         preferred_mode: mode,
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
       if (response.data && response.data.length > 0) {
@@ -1251,10 +1258,12 @@ const Home = () => {
 
       {/* Right Section (Map) */}
       <Box sx={{ flex: 8, overflow: "hidden" }}>
-        <Box ref={mapRef} style={{ height: "100%", width: "100%" }} />
+        <Box ref={mapRef} style={{ height: "70%", width: "100%" }} />
       </Box>
     </Box>
   );
 };
 
 export default Home;
+
+
