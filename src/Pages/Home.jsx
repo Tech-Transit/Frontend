@@ -368,14 +368,6 @@
 
 
 
-
-
-
-
-
-
-
-
 // import React, { useState, useEffect, useRef } from "react";
 // import {
 //   Box,
@@ -393,6 +385,7 @@
 // import L from "leaflet";
 // import "leaflet/dist/leaflet.css";
 // import axios from "axios";
+// import { motion } from 'framer-motion';
 
 // // List of all ports, airports, and rail terminals (national and international)
 // const facilities = [
@@ -510,9 +503,13 @@
 //   const fetchCoordinates = async () => {
 //     try {
 //       const response = await axios.post("http://127.0.0.1:5000/api/calculate_routes", {
-//         source: source,
-//         target: destination,
+//         source: source[0],
+//         target: destination[0],
 //         preferred_mode: mode,
+//       }, {
+//         headers: {
+//           'Content-Type': 'application/json'
+//         }
 //       });
 
 //       if (response.data && response.data.length > 0) {
@@ -527,9 +524,13 @@
 //   const fetchRankedRoutes = async () => {
 //     try {
 //       const response = await axios.post("http://127.0.0.1:5000/api/ranked_routes", {
-//         source: source,
-//         target: destination,
+//         source: source[0],
+//         target: destination[0],
 //         preferred_mode: mode,
+//       }, {
+//         headers: {
+//           'Content-Type': 'application/json'
+//         }
 //       });
 
 //       if (response.data && response.data.length > 0) {
@@ -655,15 +656,15 @@
 //   };
 
 //   return (
-//     <Box sx={{ display: "flex", height: "100vh",  background: 'linear-gradient(90deg, hsla(236, 100%, 8%, 1) 0%, hsla(211, 100%, 28%, 1) 100%)', color: "white", fontFamily: "lato", overflow: "hidden" }}>
+//     <Box sx={{ display: "flex", height: "100vh", background: 'linear-gradient(90deg, hsla(236, 100%, 8%, 1) 0%, hsla(211, 100%, 28%, 1) 100%)', color: "white", fontFamily: "lato", overflow: "hidden" }}>
 //       {/* Left Section (Form) */}
 //       <Box sx={{ flex: 2, padding: 3, borderRight: "1px solid #ccc", overflowY: "auto" }}>
-//         <Typography variant="h5" sx={{ fontWeight: 'bold' , fontFamily :'lato'}} gutterBottom>
+//         <Typography variant="h5" sx={{ fontWeight: 'bold', fontFamily: 'lato' }} gutterBottom>
 //           Shipment Details
 //         </Typography>
 
 //         <FormControl variant="outlined" fullWidth sx={{ mb: 2 }}>
-//           <InputLabel sx={{ color: "white" , fontFamily :'lato' }}>Category</InputLabel>
+//           <InputLabel sx={{ color: "white", fontFamily: 'lato' }}>Category</InputLabel>
 //           <Select
 //             multiple
 //             value={category}
@@ -721,7 +722,7 @@
 //           InputProps={{ style: { color: 'white' } }}
 //         />
 
-//         <Typography variant="h5" sx={{ fontWeight: 'bold' , fontFamily :'lato'}}  gutterBottom>
+//         <Typography variant="h5" sx={{ fontWeight: 'bold', fontFamily: 'lato' }} gutterBottom>
 //           Transport Route Finder
 //         </Typography>
 
@@ -778,9 +779,26 @@
 //           </Select>
 //         </FormControl>
 
-//         <Button variant="contained" onClick={findRoute} sx={{ mt: 2, width: "100%" }}>
-//           Find Route
-//         </Button>
+//         <motion.div
+//           whileHover={{ scale: 1.05 }}
+//           whileTap={{ scale: 0.95 }}
+//         >
+//           <Button
+//             variant="contained"
+//             onClick={findRoute}
+//             sx={{
+//               mt: 2,
+//               width: "100%",
+//               backgroundColor: "white",
+//               color: "black",
+//               '&:hover': {
+//                 backgroundColor: "#f0f0f0",
+//               },
+//             }}
+//           >
+//             Find Route
+//           </Button>
+//         </motion.div>
 
 //         {loading && <CircularProgress sx={{ mt: 2 }} />}
 //         {error && <Box sx={{ mt: 2, color: "red" }}>{error}</Box>}
@@ -798,7 +816,7 @@
 
 //       {/* Right Section (Map) */}
 //       <Box sx={{ flex: 8, overflow: "hidden" }}>
-//         <Box ref={mapRef} style={{ height: "100%", width: "100%" }} />
+//         <Box ref={mapRef} style={{ height: "70%", width: "100%" }} />
 //       </Box>
 //     </Box>
 //   );
@@ -822,6 +840,7 @@ import {
   TextField,
   Select,
   OutlinedInput,
+  Paper,
 } from "@mui/material";
 import { useTheme } from '@mui/material/styles';
 import L from "leaflet";
@@ -975,7 +994,7 @@ const Home = () => {
         }
       });
 
-      if (response.data && response.data.length > 0) {
+      if (response.data) {
         setRankedRoutes(response.data);
       }
     } catch (error) {
@@ -1034,7 +1053,7 @@ const Home = () => {
         L.marker(midPoint, {
           icon: L.divIcon({
             className: "distance-marker",
-            html: `<span style="background-color: rgba(255, 255, 255, 0.8); padding: 2px 5px; border-radius: 5px;">${(distance / 1000).toFixed(2)} km</span>`,
+            html: `<span style="background-color: rgba(255, 255, 255, 0.8); color: 'black' ; padding: 2px 5px; border-radius: 5px;">${(distance / 1000).toFixed(2)} km</span>`,
           }),
         }).addTo(mapInstanceRef.current);
       }
@@ -1098,10 +1117,10 @@ const Home = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh", background: 'linear-gradient(90deg, hsla(236, 100%, 8%, 1) 0%, hsla(211, 100%, 28%, 1) 100%)', color: "white", fontFamily: "lato", overflow: "hidden" }}>
+    <Box sx={{ display: "flex", height: "170vh", background: 'linear-gradient(90deg, hsla(236, 100%, 8%, 1) 0%, hsla(211, 100%, 28%, 1) 100%)', color: "white", fontFamily: "lato" }}>
       {/* Left Section (Form) */}
-      <Box sx={{ flex: 2, padding: 3, borderRight: "1px solid #ccc", overflowY: "auto" }}>
-        <Typography variant="h5" sx={{ fontWeight: 'bold', fontFamily: 'lato' }} gutterBottom>
+      <Box sx={{ flex: 2, padding: 3, borderRight: "1px solid #ccc"}}>
+        <Typography variant="h5" sx={{ fontWeight: 'bold', fontFamily: 'lato' , mb: 4 }} gutterBottom>
           Shipment Details
         </Typography>
 
@@ -1164,7 +1183,7 @@ const Home = () => {
           InputProps={{ style: { color: 'white' } }}
         />
 
-        <Typography variant="h5" sx={{ fontWeight: 'bold', fontFamily: 'lato' }} gutterBottom>
+        <Typography variant="h5" sx={{ fontWeight: 'bold', fontFamily: 'lato'  , mb: 4}} gutterBottom>
           Transport Route Finder
         </Typography>
 
@@ -1244,26 +1263,47 @@ const Home = () => {
 
         {loading && <CircularProgress sx={{ mt: 2 }} />}
         {error && <Box sx={{ mt: 2, color: "red" }}>{error}</Box>}
-        {rankedRoutes.length > 0 && (
-          <Box sx={{ mt: 2 }}>
-            <Typography variant="h6">Ranked Routes:</Typography>
-            <ul>
-              {rankedRoutes.map((route, index) => (
-                <li key={index}>{`Route ${index + 1}: ${route}`}</li>
-              ))}
-            </ul>
-          </Box>
-        )}
       </Box>
 
-      {/* Right Section (Map) */}
-      <Box sx={{ flex: 8, overflow: "hidden" }}>
-        <Box ref={mapRef} style={{ height: "70%", width: "100%" }} />
+      {/* Right Section (Map and Ranked Routes) */}
+<Box sx={{ flex: 8, display: "flex", flexDirection: "column" }}>
+  <Box ref={mapRef} style={{ height: "60%", width: "100%" }} />
+
+  {/* Ranked Routes */}
+  <Paper sx={{ flex: 1, margin: 2, padding: 2, backgroundColor: "white", color: "black" }}>
+    <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 2 }}>Ranked Routes</Typography>
+    {rankedRoutes.ranked_by_cost && rankedRoutes.ranked_by_cost.length > 0 && (
+      <Box sx={{ marginBottom: 2 }}>
+        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Ranked by Cost</Typography>
+        {rankedRoutes.ranked_by_cost.map((route, index) => (
+          <Paper key={index} sx={{ padding: 2, marginBottom: 2 }}>
+            <Typography variant="body1"><strong>Rank:</strong> {route.rank}</Typography>
+            <Typography variant="body1"><strong>Route:</strong> {route.route}</Typography>
+            <Typography variant="body1"><strong>Total Carbon Emission:</strong> {route.total_carbon_emission}</Typography>
+            <Typography variant="body1"><strong>Total Cost:</strong> ${route.total_cost.toFixed(2)}</Typography>
+            <Typography variant="body1"><strong>Total Transit Time (hours):</strong> {route.total_transit_time_hours}</Typography>
+          </Paper>
+        ))}
       </Box>
+    )}
+    {rankedRoutes.ranked_by_time && rankedRoutes.ranked_by_time.length > 0 && (
+      <Box>
+        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Ranked by Time</Typography>
+        {rankedRoutes.ranked_by_time.map((route, index) => (
+          <Paper key={index} sx={{ padding: 2, marginBottom: 2 }}>
+            <Typography variant="body1"><strong>Rank:</strong> {route.rank}</Typography>
+            <Typography variant="body1"><strong>Route:</strong> {route.route}</Typography>
+            <Typography variant="body1"><strong>Total Carbon Emission:</strong> {route.total_carbon_emission}</Typography>
+            <Typography variant="body1"><strong>Total Cost:</strong> ${route.total_cost.toFixed(2)}</Typography>
+            <Typography variant="body1"><strong>Total Transit Time (hours):</strong> {route.total_transit_time_hours}</Typography>
+          </Paper>
+        ))}
+      </Box>
+    )}
+  </Paper>
+</Box>
     </Box>
   );
 };
 
 export default Home;
-
-

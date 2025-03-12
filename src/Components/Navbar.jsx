@@ -6,7 +6,7 @@ import ShinyText from './ShinyText';
 
 const Navbar = () => {
     return (
-        <AppBar position="fixed" sx={{ backgroundColor: '#1c1c1c' }}> {/* Changed to a darker color */}
+        <AppBar position="fixed" sx={{ backgroundColor: '#000' }}> {/* Changed to a darker color */}
             <Toolbar sx={{ justifyContent: 'space-between' }}>
                 {/* Logo */}
                 <Box component={Link} to="/" sx={{ display: 'flex', alignItems: 'center', textDecoration: "none", color: "inherit" }}>
