@@ -1119,8 +1119,8 @@ const Home = () => {
   return (
     <Box sx={{ display: "flex", height: "170vh", background: 'linear-gradient(90deg, hsla(236, 100%, 8%, 1) 0%, hsla(211, 100%, 28%, 1) 100%)', color: "white", fontFamily: "lato" }}>
       {/* Left Section (Form) */}
-      <Box sx={{ flex: 2, padding: 3, borderRight: "1px solid #ccc"}}>
-        <Typography variant="h5" sx={{ fontWeight: 'bold', fontFamily: 'lato' , mb: 4 }} gutterBottom>
+      <Box sx={{ flex: 2, padding: 3, borderRight: "1px solid #ccc" }}>
+        <Typography variant="h5" sx={{ fontWeight: 'bold', fontFamily: 'lato', mb: 4 }} gutterBottom>
           Shipment Details
         </Typography>
 
@@ -1183,7 +1183,7 @@ const Home = () => {
           InputProps={{ style: { color: 'white' } }}
         />
 
-        <Typography variant="h5" sx={{ fontWeight: 'bold', fontFamily: 'lato'  , mb: 4}} gutterBottom>
+        <Typography variant="h5" sx={{ fontWeight: 'bold', fontFamily: 'lato', mb: 4 }} gutterBottom>
           Transport Route Finder
         </Typography>
 
@@ -1266,42 +1266,42 @@ const Home = () => {
       </Box>
 
       {/* Right Section (Map and Ranked Routes) */}
-<Box sx={{ flex: 8, display: "flex", flexDirection: "column" }}>
-  <Box ref={mapRef} style={{ height: "60%", width: "100%" }} />
+      <Box sx={{ flex: 8, display: "flex", flexDirection: "column" }}>
+        <Box ref={mapRef} style={{ height: "60%", width: "100%" }} />
 
-  {/* Ranked Routes */}
-  <Paper sx={{ flex: 1, margin: 2, padding: 2, backgroundColor: "white", color: "black" }}>
-    <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 2 }}>Ranked Routes</Typography>
-    {rankedRoutes.ranked_by_cost && rankedRoutes.ranked_by_cost.length > 0 && (
-      <Box sx={{ marginBottom: 2 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Ranked by Cost</Typography>
-        {rankedRoutes.ranked_by_cost.map((route, index) => (
-          <Paper key={index} sx={{ padding: 2, marginBottom: 2 }}>
-            <Typography variant="body1"><strong>Rank:</strong> {route.rank}</Typography>
-            <Typography variant="body1"><strong>Route:</strong> {route.route}</Typography>
-            <Typography variant="body1"><strong>Total Carbon Emission:</strong> {route.total_carbon_emission}</Typography>
-            <Typography variant="body1"><strong>Total Cost:</strong> ${route.total_cost.toFixed(2)}</Typography>
-            <Typography variant="body1"><strong>Total Transit Time (hours):</strong> {route.total_transit_time_hours}</Typography>
-          </Paper>
-        ))}
+        {/* Ranked Routes */}
+        <Paper sx={{ flex: 1, margin: 2, padding: 2, backgroundColor: "white", color: "black" }}>
+          <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 2 }}>Ranked Routes</Typography>
+          {rankedRoutes.ranked_by_cost && rankedRoutes.ranked_by_cost.length > 0 && (
+            <Box sx={{ marginBottom: 2 }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Ranked by Cost</Typography>
+              {rankedRoutes.ranked_by_cost.map((route, index) => (
+                <Paper key={index} sx={{ padding: 2, marginBottom: 2 }}>
+                  <Typography variant="body1"><strong>Rank:</strong> {route.rank}</Typography>
+                  <Typography variant="body1"><strong>Route:</strong> {route.route}</Typography>
+                  <Typography variant="body1"><strong>Total Carbon Emission:</strong> {route.total_carbon_emission}</Typography>
+                  <Typography variant="body1"><strong>Total Cost:</strong> ${route.total_cost.toFixed(2)}</Typography>
+                  <Typography variant="body1"><strong>Total Transit Time (hours):</strong> {route.total_transit_time_hours}</Typography>
+                </Paper>
+              ))}
+            </Box>
+          )}
+          {rankedRoutes.ranked_by_time && rankedRoutes.ranked_by_time.length > 0 && (
+            <Box>
+              <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Ranked by Time</Typography>
+              {rankedRoutes.ranked_by_time.map((route, index) => (
+                <Paper key={index} sx={{ padding: 2, marginBottom: 2 }}>
+                  <Typography variant="body1"><strong>Rank:</strong> {route.rank}</Typography>
+                  <Typography variant="body1"><strong>Route:</strong> {route.route}</Typography>
+                  <Typography variant="body1"><strong>Total Carbon Emission:</strong> {route.total_carbon_emission}</Typography>
+                  <Typography variant="body1"><strong>Total Cost:</strong> ${route.total_cost.toFixed(2)}</Typography>
+                  <Typography variant="body1"><strong>Total Transit Time (hours):</strong> {route.total_transit_time_hours}</Typography>
+                </Paper>
+              ))}
+            </Box>
+          )}
+        </Paper>
       </Box>
-    )}
-    {rankedRoutes.ranked_by_time && rankedRoutes.ranked_by_time.length > 0 && (
-      <Box>
-        <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Ranked by Time</Typography>
-        {rankedRoutes.ranked_by_time.map((route, index) => (
-          <Paper key={index} sx={{ padding: 2, marginBottom: 2 }}>
-            <Typography variant="body1"><strong>Rank:</strong> {route.rank}</Typography>
-            <Typography variant="body1"><strong>Route:</strong> {route.route}</Typography>
-            <Typography variant="body1"><strong>Total Carbon Emission:</strong> {route.total_carbon_emission}</Typography>
-            <Typography variant="body1"><strong>Total Cost:</strong> ${route.total_cost.toFixed(2)}</Typography>
-            <Typography variant="body1"><strong>Total Transit Time (hours):</strong> {route.total_transit_time_hours}</Typography>
-          </Paper>
-        ))}
-      </Box>
-    )}
-  </Paper>
-</Box>
     </Box>
   );
 };
